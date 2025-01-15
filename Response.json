@@ -1,0 +1,15 @@
+{
+    "quiz": [
+      {
+        "mcq": "Your question here",
+        "options": {
+          "a": "Choice A",
+          "b": "Choice B",
+          "c": "Choice C",
+          "d": "Choice D"
+        },
+        "answer": "correct answer"
+      }
+    ]
+  }
+  
