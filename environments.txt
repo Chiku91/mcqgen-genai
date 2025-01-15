@@ -1,0 +1,4 @@
+C:\Users\ASUS\anaconda3
+C:\Users\ASUS\anaconda3\install
+C:\Users\ASUS\anaconda3\install\envs\testingopenai
+C:\Users\ASUS\mcqgen\env
