@@ -1,0 +1,9 @@
+[2025-01-16 23:56:07,429] 1025 httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-01-16 23:56:07,457] 114 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 94, in <module>
+    quiz_output_dict = json.loads(quiz_output)  # Assuming the output is in JSON format
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\json\__init__.py", line 339, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+TypeError: the JSON object must be str, bytes or bytearray, not dict
+

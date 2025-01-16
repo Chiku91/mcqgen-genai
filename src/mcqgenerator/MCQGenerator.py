@@ -3,166 +3,135 @@ import json
 import traceback
 import pandas as pd
 from dotenv import load_dotenv
-from src.mcqgenerator.utils import read_file,create_and_print_dataframe
+from src.mcqgenerator.utils import read_file, create_and_print_dataframe
+import streamlit as st
+from langchain_community.callbacks.manager import get_openai_callback
 from src.mcqgenerator.logger import logging
 
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.chains import SequentialChain
+# Loading JSON file (make sure to use the correct path for your environment)
+with open('C:/Users/ASUS/Desktop/mcqgen/Response.json', 'r') as file:
+    RESPONSE_JSON = json.load(file)
 
-load_dotenv()
+# Creating a title for the app
+st.title("MCQs Creator Application with Langchain 🦜⛓️")
 
-key=os.getenv("OPENAI_API_KEY")
+# Create a form with st.form
+with st.form("user_inputs"):
+    # File Upload
+    uploaded_file = st.file_uploader("Upload a PDF or txt file")
 
-llm= ChatOpenAI(openai_api_key=key,model_name="gpt-3.5-turbo", temperature=0.7)
+    # Input Fields
+    mcq_count = st.number_input("No. of MCQs", min_value=3, max_value=50)
 
-TEMPLATE = """
-Text: {text}
-You are an expert MCQ maker. Given the above text, create exactly {number} multiple choice questions for {subject} students in a {tone} tone. 
-Each question should be unique and related to the text. Ensure that all questions are clear, unambiguous, and well-formed, ensuring that each question is of good quality.
-The format for the response should strictly follow this structure:
-{{
-  "quiz": [
-    {{
-      "mcq": "Your question here",
-      "options": {{
-        "a": "Choice A",
-        "b": "Choice B",
-        "c": "Choice C",
-        "d": "Choice D"
-      }},
-      "answer": "correct answer"
-    }} 
-  ]
-}}
-Ensure that there are {number} MCQs and no more than that. If less than {number} MCQs are generated, continue generating until the exact number is produced.
-"""
-quiz_generation_prompt = PromptTemplate(
-    input_variables=["text", "number", "subject", "tone"],
-    template=TEMPLATE
-)
+    # Subject
+    subject = st.text_input("Insert Subject", max_chars=20)
 
-quiz_chain = LLMChain(llm=llm, prompt=quiz_generation_prompt)
+    # Quiz Tone
+    tone = st.text_input("Complexity Level of Questions", max_chars=20, placeholder="Simple")
 
-TEMPLATE2 = """
-You are an expert English grammarian and writer. Given a Multiple Choice Quiz for {subject} students, evaluate the complexity of the questions and provide a complete analysis of the quiz.
-If the quiz is not at par with the cognitive and analytical abilities of the students, update the quiz questions that need to be changed and adjust the tone so it perfectly fits the student abilities.
-Quiz_MCQs:
-{quiz}
+    # Add Button
+    button = st.form_submit_button("Create MCQs")
 
-Check from an expert English Writer of the above quiz:
-"""
+    # Check if the button is clicked and all fields have input
+    if button and uploaded_file is not None and mcq_count and subject and tone:
+        with st.spinner("loading..."):
+            try:
+                # Read the uploaded file
+                text = read_file(uploaded_file)
 
-quiz_evaluation_prompt = PromptTemplate(
-    input_variables=["subject", "quiz"],  # Only subject and quiz are needed for review chain
-    template=TEMPLATE2
-)
+                # Now get the input data and pass it to the OpenAI callback
+                input_data = {
+                    "text": text,  # Read text from file dynamically
+                    "number": mcq_count,
+                    "subject": subject,
+                    "tone": tone
+                }
 
-review_chain = LLMChain(llm=llm, prompt=quiz_evaluation_prompt)
+                # Use the OpenAI callback to generate the MCQs
+                with get_openai_callback() as callback:
+                    # Assuming that `generate_mcqs` is a function that generates MCQs
+                    response = callback(input_data)
+                    
+                    # Process the response (assuming response contains MCQs)
+                    mcqs = response.get('mcqs', [])
 
-# User-defined inputs
-NUMBER = 5  # Number of MCQs the user wants
-SUBJECT = "Programming"
-TONE = "friendly"
-
-# Define the callback function to log the result
-def openai_callback(result, *args, **kwargs):
-    print("OpenAI Callback triggered!")
-    print(f"Result: {result}")
-
-# Use get_openai_callback directly and capture the output
-with get_openai_callback() as callback:
-    # Step 1: Generate the quiz using the first chain
-    input_data = {
-        "text": TEXT,  # Read text from file dynamically
-        "number": NUMBER,
-        "subject": SUBJECT,
-        "tone": TONE
-    }
-
-    # Run the quiz generation chain
-    quiz_output = ""
-    while True:
-        try:
-            # Generate the quiz
-            quiz_output = quiz_chain.run(input_data)  # Run the chain to generate the quiz
-
-            # Log the raw output from the quiz generation chain for inspection
-            print("Raw response from quiz generation chain:")
-            print(quiz_output)
-
-            # Check if the output is empty
-            if not quiz_output.strip():
-                print("Error: Received empty response from the quiz generation model.")
-                quiz_output_dict = {}
-            else:
-                # Try parsing the response as JSON
-                try:
-                    # Attempt to load the response as JSON (this is now more strict)
-                    quiz_output_dict = json.loads(quiz_output)  # Parse the output as JSON
-
-                    # Check if the generated quiz contains the correct number of MCQs
-                    quiz_list = quiz_output_dict.get("quiz", [])
-                    if len(quiz_list) >= NUMBER:
-                        break  # Exit the loop if we have enough questions
+                    if mcqs:
+                        # Display the generated MCQs
+                        st.write("Generated MCQs:")
+                        create_and_print_dataframe(mcqs)
                     else:
-                        print(f"Generated {len(quiz_list)} MCQs, but {NUMBER} are required. Re-generating...")
-                except json.JSONDecodeError as e:
-                    print(f"Error parsing quiz output as JSON: {e}")
-                    print(f"Raw output received: {quiz_output}")  # Print the raw output for debugging
-                    quiz_output_dict = {}
-        except Exception as e:
-            print(f"Error during quiz generation: {e}")
-            quiz_output_dict = {}
+                        st.error("No MCQs generated. Please try again.")
+                    
+                    # Total Tokens
+                    st.write(f"Total Tokens: {callback.total_tokens}")    
+                    # Input Token
+                    st.write(f"Prompt Tokens: {callback.prompt_tokens}")
+                    # Output Token
+                    st.write(f"Completion Tokens: {callback.completion_tokens}")
+                    # Total Cost
+                    st.write(f"Total Cost: {callback.total_cost}")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
+                logging.error(f"Error: {traceback.format_exc()}")
 
-    # If quiz output is empty or doesn't contain valid data, handle gracefully
-    if not quiz_output_dict:
-        print("Error: Generated quiz output is empty or invalid.")
-        quiz = ""
-    else:
-        # Extract the generated quiz from the output
-        quiz = json.dumps(quiz_output_dict, indent=4)
-
-    # Step 3: Evaluate the quiz using the second chain (passing the quiz output from step 1)
-    if quiz:
-        evaluation_input = {
-            "subject": SUBJECT,
-            "quiz": quiz
+# Assuming quiz_dict is provided elsewhere in the code
+quiz_dict = {
+    "quiz": [
+        {
+            "mcq": "What is the capital of France?",
+            "options": {
+                "a": "Paris",
+                "b": "London",
+                "c": "Berlin",
+                "d": "Madrid"
+            },
+            "answer": "a"
+        },
+        {
+            "mcq": "Which is the largest ocean?",
+            "options": {
+                "a": "Atlantic",
+                "b": "Indian",
+                "c": "Pacific",
+                "d": "Arctic"
+            },
+            "answer": "c"
         }
+    ]
+}
 
-        try:
-            # Run the review chain to evaluate the quiz
-            review_output = review_chain.run(evaluation_input)
+# List to hold the quiz data
+quiz_data = []
 
-            # Print the result (this will include both the quiz and the review)
-            print("\nGenerated Quiz in DataFrame Format:")
+# Check if quiz_dict is a dictionary and contains the key 'quiz' with a list value
+if isinstance(quiz_dict, dict) and "quiz" in quiz_dict and isinstance(quiz_dict["quiz"], list):
+    # Loop through each item in the quiz list
+    for idx, item in enumerate(quiz_dict["quiz"], start=1):
+        mcq = item.get("mcq", "")
+        options = item.get("options", {})
+        answer = item.get("answer", "")
 
-            # Extract the quiz and represent it as a DataFrame
-            quiz_dict = json.loads(quiz)  # Parse the quiz JSON again
-            quiz_data = []
+        # Append each question with its options and answer to the list
+        quiz_data.append({
+            "Question": mcq,
+            "Option A": options.get('a', ''),
+            "Option B": options.get('b', ''),
+            "Option C": options.get('c', ''),
+            "Option D": options.get('d', ''),
+            "Answer": answer
+        })
 
-            # Check if the quiz data exists and format it correctly
-            if "quiz" in quiz_dict:
-                for idx, item in enumerate(quiz_dict["quiz"], start=1):
-                    mcq = item["mcq"]
-                    options = item["options"]
-                    answer = item["answer"]
+    # Create a DataFrame from the quiz data
+    df = pd.DataFrame(quiz_data)
 
-                    # Append each question with its options and answer to the list
-                    quiz_data.append({
-                        "Question": mcq,
-                        "Option A": options.get('a', ''),
-                        "Option B": options.get('b', ''),
-                        "Option C": options.get('c', ''),
-                        "Option D": options.get('d', ''),
-                        "Answer": answer
-                    })
+    # Display the DataFrame as a table in Streamlit
+    st.table(df)  # Use Streamlit's st.table to display the table
+    
+    # Review text area
+    review = st.text_area("Please provide your review for the quiz:", height=150)
 
-                    print("\nReview of the Quiz:")
-            print(review_output)
-
-        except Exception as e:
-            print(f"Error during quiz evaluation: {e}")
-    else:
-        print("No quiz generated, skipping evaluation.")
+    if review:
+        st.write("Your review has been submitted:")
+        st.write(review)
+else:
+    st.error("Error in the table data")

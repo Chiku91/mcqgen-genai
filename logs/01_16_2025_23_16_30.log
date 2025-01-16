@@ -1,0 +1,59 @@
+[2025-01-16 23:16:53,279] 1025 httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+[2025-01-16 23:16:53,296] 131 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 95, in <module>
+    quiz_output = quiz_chain.run(input_data, callbacks=[callback])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\_api\deprecation.py", line 182, in warning_emitting_wrapper
+    return wrapped(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\base.py", line 606, in run
+    return self(args[0], callbacks=callbacks, tags=tags, metadata=metadata)[
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\_api\deprecation.py", line 182, in warning_emitting_wrapper
+    return wrapped(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\base.py", line 389, in __call__
+    return self.invoke(
+           ^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\base.py", line 170, in invoke
+    raise e
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\base.py", line 160, in invoke
+    self._call(inputs, run_manager=run_manager)
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\llm.py", line 126, in _call
+    response = self.generate([inputs], run_manager=run_manager)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain\chains\llm.py", line 138, in generate
+    return self.llm.generate_prompt(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\language_models\chat_models.py", line 786, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\language_models\chat_models.py", line 643, in generate
+    raise e
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\language_models\chat_models.py", line 633, in generate
+    self._generate_with_cache(
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\language_models\chat_models.py", line 851, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_community\chat_models\openai.py", line 476, in _generate
+    response = self.completion_with_retry(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_community\chat_models\openai.py", line 387, in completion_with_retry
+    return self.client.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\openai\resources\chat\completions.py", line 859, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\openai\_base_client.py", line 1064, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************8doA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+

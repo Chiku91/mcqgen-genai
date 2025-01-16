@@ -1,0 +1,12 @@
+[2025-01-16 22:44:10,690] 75 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 53, in <module>
+    response = callback(input_data)
+               ^^^^^^^^^^^^^^^^^^^^
+TypeError: 'OpenAICallbackHandler' object is not callable
+
+[2025-01-16 22:47:28,405] 75 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 53, in <module>
+    response = callback(input_data)
+               ^^^^^^^^^^^^^^^^^^^^
+TypeError: 'OpenAICallbackHandler' object is not callable
+

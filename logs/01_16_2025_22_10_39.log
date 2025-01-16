@@ -1,0 +1,28 @@
+[2025-01-16 22:11:57,432] 75 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\src\mcqgenerator\utils.py", line 9, in read_file
+    pdf_reader=PyPDF2.PdfFileReader(file)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\PyPDF2\_reader.py", line 1974, in __init__
+    deprecation_with_replacement("PdfFileReader", "PdfReader", "3.0.0")
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\PyPDF2\_utils.py", line 369, in deprecation_with_replacement
+    deprecation(DEPR_MSG_HAPPENED.format(old_name, removed_in, new_name))
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\PyPDF2\_utils.py", line 351, in deprecation
+    raise DeprecationError(msg)
+PyPDF2.errors.DeprecationError: PdfFileReader is deprecated and was removed in PyPDF2 3.0.0. Use PdfReader instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 40, in <module>
+    text = read_file(uploaded_file)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\mcqgen\src\mcqgenerator\utils.py", line 16, in read_file
+    raise Exception("error reading the PDF file")
+Exception: error reading the PDF file
+
+[2025-01-16 22:14:09,979] 75 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 53, in <module>
+    response = callback(input_data)
+               ^^^^^^^^^^^^^^^^^^^^
+TypeError: 'OpenAICallbackHandler' object is not callable
+

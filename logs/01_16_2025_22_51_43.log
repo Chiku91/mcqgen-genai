@@ -1,0 +1,6 @@
+[2025-01-16 22:51:44,672] 62 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 16, in <module>
+    text = read_file(uploaded_file)
+                     ^^^^^^^^^^^^^
+NameError: name 'uploaded_file' is not defined
+

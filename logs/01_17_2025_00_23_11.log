@@ -1,0 +1,13 @@
+[2025-01-17 00:23:25,413] 123 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 82, in <module>
+    prompt_template = PromptTemplate(input_variables=["text", "number", "subject", "tone"], template=quiz_generation_prompt)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\langchain_core\load\serializable.py", line 125, in __init__
+    super().__init__(*args, **kwargs)
+  File "c:\Users\ASUS\Desktop\mcqgen\env\Lib\site-packages\pydantic\main.py", line 214, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for PromptTemplate
+  Value error, Single '}' encountered in format string [type=value_error, input_value={'input_variables': ['tex...'partial_variables': {}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/value_error
+

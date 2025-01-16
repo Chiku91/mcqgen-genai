@@ -1,0 +1,6 @@
+[2025-01-16 22:54:15,995] 78 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 42, in <module>
+    quiz_output = quiz_chain.run(input_data, callbacks=[callback])
+                  ^^^^^^^^^^
+NameError: name 'quiz_chain' is not defined
+

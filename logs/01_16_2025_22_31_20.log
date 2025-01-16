@@ -1,0 +1,8 @@
+[2025-01-16 22:31:48,982] 1025 httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+[2025-01-16 22:31:48,985] 103 root - ERROR - Error generating or evaluating MCQs: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************8doA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+[2025-01-16 22:31:49,052] 164 root - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\mcqgen\StreamlitAPP.py", line 134, in <module>
+    quiz, review = generate_and_evaluate_mcqs(text, mcq_count, subject, tone)
+    ^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+
